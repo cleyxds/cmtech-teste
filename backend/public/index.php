@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+session_start();
+
+spl_autoload_register(function (string $className): void {
+    $className = ltrim($className, '\\');
+    $relativePath = str_replace('\\', '/', $className) . '.php';
+
+    $directories = [
+        __DIR__ . '/../src',
+        __DIR__ . '/../src/Core',
+    ];
+
+    foreach ($directories as $directory) {
+        $file = $directory . '/' . $relativePath;
+
+        if (file_exists($file)) {
+            require_once $file;
+            return;
+        }
+    }
+});
+
+$router = new Router();
+$routes = require __DIR__ . '/../routes/web.php';
+
+$routes($router);
+$router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

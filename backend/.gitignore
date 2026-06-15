@@ -1,0 +1,29 @@
+
+.env
+.env.local
+.env.*.local
+config.local.php
+
+/vendor/
+
+/uploads/
+/storage/
+*.log
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
