@@ -28,12 +28,13 @@ class AddressService
         if (!$user) {
             throw new NotFoundException('User not found');
         }
-        
-        $this->validateAddressData($addressData);
-        
+        // If zip code provided, fetch details from ViaCEP first so validation
+        // can rely on returned address fields (street, neighborhood, city, state).
         if (isset($addressData['zip_code'])) {
             $addressData = $this->fetchAddressFromViaCEP($addressData);
         }
+
+        $this->validateAddressData($addressData);
 
         $address = new Address(
             $userId,
@@ -57,12 +58,13 @@ class AddressService
         if (!$address) {
             throw new NotFoundException('Address not found');
         }
-        
-        $this->validateAddressData($addressData, false);
-        
+        // For updates, if a new zip_code is provided, fetch its details first
+        // to allow partial updates that rely on ViaCEP data.
         if (isset($addressData['zip_code'])) {
             $addressData = $this->fetchAddressFromViaCEP($addressData);
         }
+
+        $this->validateAddressData($addressData, false);
 
         if (isset($addressData['zip_code'])) {
             $address->setZipCode($addressData['zip_code']);
