@@ -1,4 +1,4 @@
-![Logo](./logitrackpro.svg)
+![Logo](./cmtech.png)
 
 # CMTech App
 
