@@ -1,4 +1,3 @@
-import "./index.css"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { MainLayout } from "./components/layout/MainLayout"
 import { LoginForm } from "./components/auth/LoginForm"

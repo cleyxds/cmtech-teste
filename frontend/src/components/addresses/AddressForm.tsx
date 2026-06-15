@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
-import { createAddress, updateAddress, fetchAddressFromViaCEP } from '@/lib/api/addresses'
-import { MapPin, Loader2, Plus, Edit2, Search, Home, Building2, City, Flag } from 'lucide-react'
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
+import { createAddress, updateAddress, fetchAddressFromViaCEP } from "@/lib/api/addresses"
+import { MapPin, Loader2, Plus, Edit2, Search, Home, Building2, Flag } from "lucide-react"
 
 const addressSchema = z.object({
-  zip_code: z.string().min(8, 'CEP must be 8 characters'),
-  street: z.string().min(1, 'Street is required'),
-  number: z.string().min(1, 'Number is required'),
+  zip_code: z.string().min(8, "CEP must be 8 characters"),
+  street: z.string().min(1, "Street is required"),
+  number: z.string().min(1, "Number is required"),
   complement: z.string().optional(),
-  neighborhood: z.string().min(1, 'Neighborhood is required'),
-  city: z.string().min(1, 'City is required'),
-  state: z.string().min(2, 'State must be 2 characters'),
+  neighborhood: z.string().min(1, "Neighborhood is required"),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(2, "State must be 2 characters"),
 })
 
 type AddressFormData = z.infer<typeof addressSchema>
@@ -31,16 +31,22 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [isFetching, setIsFetching] = useState(false)
 
-  const { register, handleSubmit, setValue, getValues, formState: { errors } } = useForm<AddressFormData>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<AddressFormData>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
-      zip_code: address?.zip_code || '',
-      street: address?.street || '',
-      number: address?.number || '',
-      complement: address?.complement || '',
-      neighborhood: address?.neighborhood || '',
-      city: address?.city || '',
-      state: address?.state || '',
+      zip_code: address?.zip_code || "",
+      street: address?.street || "",
+      number: address?.number || "",
+      complement: address?.complement || "",
+      neighborhood: address?.neighborhood || "",
+      city: address?.city || "",
+      state: address?.state || "",
     },
   })
 
@@ -48,16 +54,16 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
     try {
       setIsFetching(true)
       setError(null)
-      const cleanedZipCode = zipCode.replace(/[^0-9]/g, '')
+      const cleanedZipCode = zipCode.replace(/[^0-9]/g, "")
       if (cleanedZipCode.length === 8) {
         const addressData = await fetchAddressFromViaCEP(cleanedZipCode)
-        setValue('street', addressData.logradouro || '')
-        setValue('neighborhood', addressData.bairro || '')
-        setValue('city', addressData.localidade || '')
-        setValue('state', addressData.uf || '')
+        setValue("street", addressData.logradouro || "")
+        setValue("neighborhood", addressData.bairro || "")
+        setValue("city", addressData.localidade || "")
+        setValue("state", addressData.uf || "")
       }
     } catch (err) {
-      setError('CEP not found')
+      setError("CEP not found")
     } finally {
       setIsFetching(false)
     }
@@ -74,7 +80,7 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
       }
       onSave()
     } catch (err) {
-      setError('Failed to save address')
+      setError("Failed to save address")
     } finally {
       setIsLoading(false)
     }
@@ -93,7 +99,7 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
               id="zip_code"
               placeholder="12345678"
               className="pl-10"
-              {...register('zip_code')}
+              {...register("zip_code")}
               onBlur={(e) => fetchAddressData(e.target.value)}
             />
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -117,10 +123,12 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
             )}
           </Button>
         </div>
-        {errors.zip_code && <p className="text-sm text-red-500 flex items-center space-x-1">
-          <span>•</span>
-          <span>{errors.zip_code.message}</span>
-        </p>}
+        {errors.zip_code && (
+          <p className="text-sm text-red-500 flex items-center space-x-1">
+            <span>•</span>
+            <span>{errors.zip_code.message}</span>
+          </p>
+        )}
         <p className="text-xs text-muted-foreground">
           Enter 8-digit CEP to automatically fill address fields
         </p>
@@ -136,14 +144,16 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
             id="street"
             placeholder="Rua Example"
             className="pl-10"
-            {...register('street')}
+            {...register("street")}
           />
           <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         </div>
-        {errors.street && <p className="text-sm text-red-500 flex items-center space-x-1">
-          <span>•</span>
-          <span>{errors.street.message}</span>
-        </p>}
+        {errors.street && (
+          <p className="text-sm text-red-500 flex items-center space-x-1">
+            <span>•</span>
+            <span>{errors.street.message}</span>
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -157,14 +167,16 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
               id="number"
               placeholder="123"
               className="pl-10"
-              {...register('number')}
+              {...register("number")}
             />
             <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           </div>
-          {errors.number && <p className="text-sm text-red-500 flex items-center space-x-1">
-            <span>•</span>
-            <span>{errors.number.message}</span>
-          </p>}
+          {errors.number && (
+            <p className="text-sm text-red-500 flex items-center space-x-1">
+              <span>•</span>
+              <span>{errors.number.message}</span>
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -172,7 +184,7 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
           <Input
             id="complement"
             placeholder="Apto 101, Bloco B"
-            {...register('complement')}
+            {...register("complement")}
           />
         </div>
       </div>
@@ -188,19 +200,21 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
               id="neighborhood"
               placeholder="Bairro"
               className="pl-10"
-              {...register('neighborhood')}
+              {...register("neighborhood")}
             />
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           </div>
-          {errors.neighborhood && <p className="text-sm text-red-500 flex items-center space-x-1">
-            <span>•</span>
-            <span>{errors.neighborhood.message}</span>
-          </p>}
+          {errors.neighborhood && (
+            <p className="text-sm text-red-500 flex items-center space-x-1">
+              <span>•</span>
+              <span>{errors.neighborhood.message}</span>
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="city" className="flex items-center space-x-2">
-            <City className="h-4 w-4 text-muted-foreground" />
+            <Home className="h-4 w-4 text-muted-foreground" />
             <span>City</span>
           </Label>
           <div className="relative">
@@ -208,14 +222,16 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
               id="city"
               placeholder="Cidade"
               className="pl-10"
-              {...register('city')}
+              {...register("city")}
             />
-            <City className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           </div>
-          {errors.city && <p className="text-sm text-red-500 flex items-center space-x-1">
-            <span>•</span>
-            <span>{errors.city.message}</span>
-          </p>}
+          {errors.city && (
+            <p className="text-sm text-red-500 flex items-center space-x-1">
+              <span>•</span>
+              <span>{errors.city.message}</span>
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -224,25 +240,24 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
             <span>State</span>
           </Label>
           <div className="relative">
-            <Input
-              id="state"
-              placeholder="SP"
-              className="pl-10"
-              {...register('state')}
-            />
+            <Input id="state" placeholder="SP" className="pl-10" {...register("state")} />
             <Flag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           </div>
-          {errors.state && <p className="text-sm text-red-500 flex items-center space-x-1">
-            <span>•</span>
-            <span>{errors.state.message}</span>
-          </p>}
+          {errors.state && (
+            <p className="text-sm text-red-500 flex items-center space-x-1">
+              <span>•</span>
+              <span>{errors.state.message}</span>
+            </p>
+          )}
         </div>
       </div>
 
-      {error && <div className="p-3 bg-destructive/10 rounded-md text-sm text-destructive flex items-center space-x-2">
-        <span>!</span>
-        <span>{error}</span>
-      </div>}
+      {error && (
+        <div className="p-3 bg-destructive/10 rounded-md text-sm text-destructive flex items-center space-x-2">
+          <span>!</span>
+          <span>{error}</span>
+        </div>
+      )}
 
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? (
@@ -250,18 +265,16 @@ export function AddressForm({ userId, address, onSave }: AddressFormProps) {
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             <span>Saving...</span>
           </>
+        ) : address ? (
+          <>
+            <Edit2 className="mr-2 h-4 w-4" />
+            <span>Update Address</span>
+          </>
         ) : (
-          address ? (
-            <>
-              <Edit2 className="mr-2 h-4 w-4" />
-              <span>Update Address</span>
-            </>
-          ) : (
-            <>
-              <Plus className="mr-2 h-4 w-4" />
-              <span>Create Address</span>
-            </>
-          )
+          <>
+            <Plus className="mr-2 h-4 w-4" />
+            <span>Create Address</span>
+          </>
         )}
       </Button>
     </form>

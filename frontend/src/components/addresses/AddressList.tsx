@@ -1,11 +1,24 @@
-import { useState, useEffect } from 'react'
-import { getAddressesByUser, deleteAddress } from '@/lib/api/addresses'
-import { Button } from '../ui/button'
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../ui/table'
-import { AddressForm } from './AddressForm'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { ConfirmationDialog } from '../ui/confirmation-dialog'
-import { MapPin, Plus, Edit2, Trash2, Loader2 } from 'lucide-react'
+import { useState, useEffect } from "react"
+import { getAddressesByUser, deleteAddress } from "@/lib/api/addresses"
+import { Button } from "../ui/button"
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "../ui/table"
+import { AddressForm } from "./AddressForm"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog"
+import { ConfirmationDialog } from "../ui/confirmation-dialog"
+import { MapPin, Plus, Edit2, Trash2, Loader2 } from "lucide-react"
 
 interface AddressListProps {
   userId: number
@@ -25,7 +38,7 @@ export function AddressList({ userId }: AddressListProps) {
       const data = await getAddressesByUser(userId)
       setAddresses(data)
     } catch (err) {
-      setError('Failed to fetch addresses')
+      setError("Failed to fetch addresses")
     } finally {
       setLoading(false)
     }
@@ -38,10 +51,10 @@ export function AddressList({ userId }: AddressListProps) {
   const handleDelete = async (id: number) => {
     try {
       await deleteAddress(id)
-      setAddresses(addresses.filter(address => address.id !== id))
+      setAddresses(addresses.filter((address) => address.id !== id))
       setIsConfirmOpen(false)
     } catch (err) {
-      setError('Failed to delete address')
+      setError("Failed to delete address")
     }
   }
 
@@ -61,29 +74,31 @@ export function AddressList({ userId }: AddressListProps) {
     setIsConfirmOpen(true)
   }
 
-  if (loading) return (
-    <div className="flex items-center justify-center h-64">
-      <div className="flex flex-col items-center space-y-4">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-muted-foreground">Loading addresses...</p>
-      </div>
-    </div>
-  )
-
-  if (error) return (
-    <div className="flex items-center justify-center h-64">
-      <div className="flex flex-col items-center space-y-4 text-center">
-        <div className="bg-destructive/10 p-4 rounded-full">
-          <Trash2 className="h-8 w-8 text-destructive" />
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading addresses...</p>
         </div>
-        <h2 className="text-xl font-semibold">Error loading addresses</h2>
-        <p className="text-muted-foreground">{error}</p>
-        <Button onClick={fetchAddresses} variant="outline">
-          Try again
-        </Button>
       </div>
-    </div>
-  )
+    )
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <div className="bg-destructive/10 p-4 rounded-full">
+            <Trash2 className="h-8 w-8 text-destructive" />
+          </div>
+          <h2 className="text-xl font-semibold">Error loading addresses</h2>
+          <p className="text-muted-foreground">{error}</p>
+          <Button onClick={fetchAddresses} variant="outline">
+            Try again
+          </Button>
+        </div>
+      </div>
+    )
 
   return (
     <div className="container mx-auto py-8">
@@ -99,12 +114,15 @@ export function AddressList({ userId }: AddressListProps) {
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => setEditingAddress(null)} className="flex items-center space-x-2">
+            <Button
+              onClick={() => setEditingAddress(null)}
+              className="flex items-center space-x-2"
+            >
               <Plus className="h-4 w-4" />
               <span>Add Address</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl bg-white">
             <DialogHeader>
               <DialogTitle className="flex items-center space-x-2">
                 {editingAddress ? (
@@ -120,7 +138,11 @@ export function AddressList({ userId }: AddressListProps) {
                 )}
               </DialogTitle>
             </DialogHeader>
-            <AddressForm userId={userId} address={editingAddress} onSave={handleAddressSaved} />
+            <AddressForm
+              userId={userId}
+              address={editingAddress}
+              onSave={handleAddressSaved}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -155,7 +177,10 @@ export function AddressList({ userId }: AddressListProps) {
               </TableRow>
             ) : (
               addresses.map((address) => (
-                <TableRow key={address.id} className="hover:bg-muted/50 transition-colors">
+                <TableRow
+                  key={address.id}
+                  className="hover:bg-muted/50 transition-colors"
+                >
                   <TableCell className="font-medium">{address.id}</TableCell>
                   <TableCell>{address.zip_code}</TableCell>
                   <TableCell>{address.street}</TableCell>

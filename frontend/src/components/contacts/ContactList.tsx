@@ -1,11 +1,24 @@
-import { useState, useEffect } from 'react'
-import { getPhonesByUser, deletePhone } from '@/lib/api/contacts'
-import { Button } from '../ui/button'
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../ui/table'
-import { ContactForm } from './ContactForm'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { ConfirmationDialog } from '../ui/confirmation-dialog'
-import { Phone, Plus, Edit2, Trash2, Loader2 } from 'lucide-react'
+import { useState, useEffect } from "react"
+import { getPhonesByUser, deletePhone } from "@/lib/api/contacts"
+import { Button } from "../ui/button"
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "../ui/table"
+import { ContactForm } from "./ContactForm"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog"
+import { ConfirmationDialog } from "../ui/confirmation-dialog"
+import { Phone, Plus, Edit2, Trash2, Loader2 } from "lucide-react"
 
 interface ContactListProps {
   userId: number
@@ -25,7 +38,7 @@ export function ContactList({ userId }: ContactListProps) {
       const data = await getPhonesByUser(userId)
       setContacts(data)
     } catch (err) {
-      setError('Failed to fetch contacts')
+      setError("Failed to fetch contacts")
     } finally {
       setLoading(false)
     }
@@ -38,10 +51,10 @@ export function ContactList({ userId }: ContactListProps) {
   const handleDelete = async (id: number) => {
     try {
       await deletePhone(id)
-      setContacts(contacts.filter(contact => contact.id !== id))
+      setContacts(contacts.filter((contact) => contact.id !== id))
       setIsConfirmOpen(false)
     } catch (err) {
-      setError('Failed to delete contact')
+      setError("Failed to delete contact")
     }
   }
 
@@ -61,29 +74,31 @@ export function ContactList({ userId }: ContactListProps) {
     setIsConfirmOpen(true)
   }
 
-  if (loading) return (
-    <div className="flex items-center justify-center h-64">
-      <div className="flex flex-col items-center space-y-4">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-muted-foreground">Loading contacts...</p>
-      </div>
-    </div>
-  )
-
-  if (error) return (
-    <div className="flex items-center justify-center h-64">
-      <div className="flex flex-col items-center space-y-4 text-center">
-        <div className="bg-destructive/10 p-4 rounded-full">
-          <Trash2 className="h-8 w-8 text-destructive" />
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading contacts...</p>
         </div>
-        <h2 className="text-xl font-semibold">Error loading contacts</h2>
-        <p className="text-muted-foreground">{error}</p>
-        <Button onClick={fetchContacts} variant="outline">
-          Try again
-        </Button>
       </div>
-    </div>
-  )
+    )
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <div className="bg-destructive/10 p-4 rounded-full">
+            <Trash2 className="h-8 w-8 text-destructive" />
+          </div>
+          <h2 className="text-xl font-semibold">Error loading contacts</h2>
+          <p className="text-muted-foreground">{error}</p>
+          <Button onClick={fetchContacts} variant="outline">
+            Try again
+          </Button>
+        </div>
+      </div>
+    )
 
   return (
     <div className="container mx-auto py-8">
@@ -93,18 +108,19 @@ export function ContactList({ userId }: ContactListProps) {
             <Phone className="h-6 w-6 text-green-600" />
             <span>Contact Management</span>
           </h1>
-          <p className="text-muted-foreground text-sm">
-            Manage user contact information
-          </p>
+          <p className="text-muted-foreground text-sm">Manage user contact information</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => setEditingContact(null)} className="flex items-center space-x-2">
+            <Button
+              onClick={() => setEditingContact(null)}
+              className="flex items-center space-x-2"
+            >
               <Plus className="h-4 w-4" />
               <span>Add Contact</span>
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-white">
             <DialogHeader>
               <DialogTitle className="flex items-center space-x-2">
                 {editingContact ? (
@@ -120,7 +136,11 @@ export function ContactList({ userId }: ContactListProps) {
                 )}
               </DialogTitle>
             </DialogHeader>
-            <ContactForm userId={userId} contact={editingContact} onSave={handleContactSaved} />
+            <ContactForm
+              userId={userId}
+              contact={editingContact}
+              onSave={handleContactSaved}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -152,15 +172,20 @@ export function ContactList({ userId }: ContactListProps) {
               </TableRow>
             ) : (
               contacts.map((contact) => (
-                <TableRow key={contact.id} className="hover:bg-muted/50 transition-colors">
+                <TableRow
+                  key={contact.id}
+                  className="hover:bg-muted/50 transition-colors"
+                >
                   <TableCell className="font-medium">{contact.id}</TableCell>
                   <TableCell>{contact.phone_number}</TableCell>
                   <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      contact.status === 'ACTIVE' 
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-muted text-muted-foreground'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        contact.status === "ACTIVE"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
                       {contact.status}
                     </span>
                   </TableCell>
