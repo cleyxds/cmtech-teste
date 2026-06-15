@@ -7,6 +7,7 @@ use Core\Response;
 use Core\Request;
 use Controllers\UserController;
 use Services\UserService;
+use Services\AuthService;
 use Repositories\UserRepositoryImpl;
 
 return function (Router $router): void {
@@ -29,6 +30,12 @@ return function (Router $router): void {
     $router->post('/users', function () use ($userController, $request): void {
         $result = $userController->createUser($request->body());
         Response::json($result, $result['success'] ? 201 : 422);
+    });
+
+    $router->post('/login', function () use ($request): void {
+        $authService = new AuthService(new UserRepositoryImpl());
+        $result = $authService->login($request->body());
+        Response::json($result, $result['success'] ? 200 : 401);
     });
 
     $router->put('/users/{id}', function (int $id) use ($userController, $request): void {
